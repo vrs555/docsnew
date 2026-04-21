@@ -1,0 +1,446 @@
+git config --global user.name "Vighnesh"
+git config --global user.email "vrs09055@gmail.com"
+
+exp 1
+create folder exp1
+cd exp1
+git init
+ls
+ls -a
+git config --global user.name "Vighnesh"
+git config --global user.email "vrs09055@gmail.com"
+echo "This is first git experiment" > README.txt
+git status
+git add . or git add README.txt
+git status
+git commit -m "initial commit"
+echo "This is second line" >> README.txt
+git status
+git add README.txt
+git commit -m "Updated README.txt"
+git log
+
+exp 2
+create folder exp2
+cd exp2
+git init
+echo "hello" > file.txt
+git add file.txt
+git commit -m "initial commit"
+git branch feature-branch
+git checkout feature-branch
+echo "This is from feature branch" >> file1.txt
+git add .
+git commit -m "Added changes in feature branch"
+git checkout master
+echo "This is from main branch" >> file1.txt
+git add .
+git commit -m "Updated file in main branch"
+git merge feature-branch
+git mergetool
+enter
+right window, right click, 3rd option and save
+git add file1.txt
+git commit -m "Resolved merge conflict"
+git log --oneline
+git branch -d feature-branch
+
+exp 3
+create repo in GitHub, and copy repo link
+create folder exp3
+git init
+git clone https://github.com/vrs555/exp3.git
+cd exp3
+git init
+or (git init,git remote add origin https://github.com/vrs555/exp3.git  git pull origin main)
+create a python file hello world
+git add main.py
+git commit -m "Added main.py file"
+git push origin main (or git push -u origin main)
+edit in GitHub
+git pull origin main or (git fetch origin git merge origin/main)
+
+
+exp 4
+create repo in GitHub with a README.md file
+git clone https://github.com/vrs555/exp4.git
+cd exp4
+touch file1.txt
+echo "This is created in master branch" > file1.txt
+git status
+git add file1.txt
+git commit -m "Initial commit in master"
+git push origin main
+git pull origin main
+git branch feature-1
+git checkout feature-1
+echo "This change is from feature-1 branch" >> file1.txt
+touch feature.txt
+echo "Feature branch file" > feature.txt
+git status
+git add .
+git commit -m "Changes done in feature-1 branch"
+git push origin feature-1
+go to GitHub, and click on all green buttons
+git checkout main
+git pull origin main
+git log --oneline
+git branch -d feature-1
+git push origin --delete feature-1
+
+exp 5
+create repo in GitHub with a README.md file
+git clone https://github.com/vrs555/exp5.git
+cd exp5
+ls
+git pull
+git tag v1.0
+git tag (or git tag ls)
+git tag -a v1.2 -m "v1.2 tag created"
+git tag
+git show v1.0
+git tag -l "v1.*"
+git push origin v1.0
+git tag v2.0
+git push --tags
+git tag -d v1.0
+git push origin -d v1.0
+
+
+exp 6 maven
+mvn --version
+mvn archetype:generate
+group is- com.bnmit
+artifact id- sample-app
+package- com.bnmit
+y
+cd sample-app
+mvn clean
+mvn package
+cd target
+java -cp sample-app-1.0-SNAPSHOT.jar com.bnmit.App
+
+exp 7 Jenkins freestyle
+Click on New Item 
+Enter an item name (Ex: sample_job) 
+Select Freestyle project and Click Ok
+Give Description (Example: Sample Free Style Job) 
+Select Discard old Builds: Enter days to keep builds and Max of Build to Keep
+In Build Step click on Add build step 
+Select Execute Windows Batch Command and type echo "Hi, Welcome to Jenkins." 
+Save and apply  
+Click on Build Now
+Click On the Console Output to Check the Output (The Printed output will be “Hi, Welcome to 
+Jenkins.”)
+
+exp 8 triggers
+create repository
+create Bankservice.java
+new item freestyle 
+In the Source Code Management Select Git 
+Repository URL : Enter your Repository URL (Example: 
+https://github.com/username/Github_Bankservice) 
+In the Credentials: Click on Add 
+Add your Username and Password of Github 
+In Branches to Build Section 
+Specify the Branch in the Branch Specifier Section (*/main or */master)
+Select Github hook trigger for GITScm polling and Poll SCM In the Schedule Enter * * * * * 
+build steps, execute windows batch commands,
+javac Bankservice.java
+java Bankservice
+save, build now
+make changes in GitHub and wait
+automatic build will happen
+
+exp 9 and 10
+pipeline project
+discard old builds
+for groovy script 
+add build test deploy stage
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+save and build
+
+
+
+exp 11 junit Calculator.java, CalculatorTest.java in eclipse
+
+
+exp 12
+Junits using Maven 
+>> mvn archetype:generate
+com.bnmit
+sample-app
+cd sample-app
+>> mvn clean test
+Open surefire-report in target for report
+
+
+exp 13
+do the mvn archetype:generate 
+same as EXP-12
+Once the mvn clean test is done copy the sample-app path 
+open Jenkins and open free style project 
+Add the execute batch steps command on build step
+cd <path>
+mvn clean test 
+save and build
+
+
+exp 14
+JaCoCo
+
+Same steps as exp-12
+Replace the jacoco plugin and delete Plugin management
+
+<plugins>
+  <plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.11</version>
+
+    <executions>
+      <!-- Attach JaCoCo agent -->
+      <execution>
+        <goals>
+          <goal>prepare-agent</goal>
+        </goals>
+      </execution>
+
+      <!-- Generate report -->
+      <execution>
+        <id>report</id>
+        <phase>test</phase>
+        <goals>
+          <goal>report</goal>
+        </goals>
+      </execution>
+    </executions>
+  </plugin>
+</plugins>
+ 
+run:
+mvn clean test 
+
+or 
+
+mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
+
+Open site folder in target and move to index.html and open it.
+
+
+exp 15
+Basic docker commands
+docker run hello-world
+docker pull nginx
+docker run -d -p 8083:80 nginx  (Verify by testing the localhost:8083)
+docker --version
+docker ps -a
+docker ps 
+docker stop <container id>
+
+
+exp 16
+Docker app and image 
+
+create sample.py (add a one line code)
+
+(Dockerfile)
+
+FROM python:3.9-slim
+WORKDIR /app
+COPY . . 
+CMD ["python","sample.py"]
+
+docker build -t my-app .
+docker run my-app
+
+--Add the port for app.py
+
+(Dockerfile)
+
+FROM python:3.9-slim
+WORKDIR /app
+COPY . . 
+EXPOSE 5020
+CMD ["python","app.py"]
+
+docker build -t my-app .
+docker run -p 5020:5020 my-app
+
+(code for app.py)
+
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+PORT = 5020
+
+class MyHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(b"<h1>Hello from Docker Python Container</h1>")
+
+server = HTTPServer(("0.0.0.0", PORT), MyHandler)
+print(f"Server running on port {PORT}...")
+server.serve_forever()
+
+
+exp 17
+Docker map and volume 
+
+(VScode)
+
+--For porting
+
+docker run -d nginx
+
+docker run -d -p 8084:80 nginx
+
+docker volume create myvolume
+docker volume ls
+
+docker run -it -v myvolume:/data ubuntu bash
+
+cd /data
+echo "Docker Volume Persistence Test" > test.txt
+exit
+
+docker run -it -v myvolume:/data ubuntu bash
+cat /data/test.txt
+
+--combining both
+
+docker run -d -p 8081:80 -v myvolume:/usr/share/nginx/html nginx
+docker run -it -v myvolume:/usr/share/nginx/html ubuntu bash
+echo "<h1>Persistent Web Page</h1>" > /usr/share/nginx/html/index.html
+exit
+http://localhost:8081
+
+
+exp 18
+Docker push:
+
+Dockerfile 
+Grade.java
+
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY . /app
+RUN javac Grade.java
+CMD ["java", "Grade"]
+
+
+import java.util.Scanner;
+
+public class Grade{
+
+  // Returns a letter grade based on the average
+  static char gradeFunction(double avg) {
+    if (avg >= 90) return 'A';
+    else if (avg >= 80) return 'B';
+    else if (avg >= 70) return 'C';
+    else if (avg >= 60) return 'D';
+    else return 'F';
+  }
+
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.print("How many grades (1 to 5)? ");
+    int count = scanner.nextInt();
+
+    // Validate the input count
+    if (count < 1 || count > 5) {
+      System.out.println("Invalid number. You must enter between 1 and 5 grades.");
+      scanner.close();
+      return; // Exit
+    }
+
+    double sum = 0.0;
+
+    // Read each grade
+    for (int i = 1; i <= count; i++) {
+      System.out.print("Enter grade " + i + ": ");
+      double grade = scanner.nextDouble();
+      sum += grade;
+    }
+
+    double avg = sum / count;
+    System.out.println("Average: " + avg);
+    System.out.println("Letter grade: " + gradeFunction(avg));
+
+    scanner.close();
+  }
+}
+
+
+docker build -t java-app
+docker login (copy the user name)
+
+docker tag java-app vrs09055/java-app:v1
+docker push vrs09055/java-app:v1
+
+Verify on docker hub
+
+
+
+
+exp 19
+create app.py and dockerfile
+in Jenkins, select pipeline, and code 
+pipeline {
+    agent any
+    stages {
+        stage('Clone Code') {
+            steps {
+                git 'https://github.com/vrs555/exp19.git' (or git branch: 'main', url: 'https://github.com/vrs555/exp19.git')
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t my-app .'
+            }
+        }
+        stage('Run Container') {
+            steps {
+                bat 'docker run -d my-app'
+            }
+        }
+    }
+}
+
+save and build
+
+
+
+exp 20
+https://github.com/vrs555/ev20.git
+Jenkins, maven project, discard old builds 5 5
+git, url and cred, */main
+triggers 1st option, and poll scm
+prestep, goal and options, package
+poststep, run only if build succeeds
+post build action, archive artifacts, target/*.war
+save and build, build succeeds, status, download war file
+go to tomcat, localhost:8090/manager/html
+warfile to deploy, select and deploy
+after deploy, click on the hyperlink of war file
+
+
+
+
+
+
+
+
+
