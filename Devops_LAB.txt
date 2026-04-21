@@ -1,0 +1,423 @@
+public class Calculator {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public double divide(int a, int b) {
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return (double) a / b;
+    }
+
+    public int square(int a) {
+        return a * a;
+    }
+
+    public int max(int a, int b) {
+        return (a > b) ? a : b;
+    }
+}
+
+-----------------------------
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CalculatorTest {
+
+    Calculator calc = new Calculator();
+
+    @Test
+    void testAdd() {
+        assertEquals(8, calc.add(5, 3));
+    }
+
+    @Test
+    void testSubtract() {
+        assertEquals(2, calc.subtract(5, 3));
+    }
+
+    @Test
+    void testMultiply() {
+        assertEquals(15, calc.multiply(5, 3));
+    }
+
+    @Test
+    void testDivide() {
+        assertEquals(2.0, calc.divide(6, 3), 0.0001); // safer for double
+    }
+
+    @Test
+    void testSquare() {
+        assertEquals(25, calc.square(5));
+    }
+
+    @Test
+    void testMax() {
+        assertEquals(9, calc.max(9, 4));
+    }
+
+    @Test
+    void testDivideByZero() {
+        Exception exception = assertThrows(
+            ArithmeticException.class,
+            () -> calc.divide(5, 0)
+        );
+
+        assertEquals("Cannot divide by zero", exception.getMessage());
+    }
+}
+
+-----------------------------
+EXP-11
+
+javac -cp "lib/junit-platform-console-standalone-1.10.0.jar" -d bin src/*.java
+
+java -jar lib/junit-platform-console-standalone-1.10.0.jar execute --class-path bin --scan-class-path --details tree
+
+
+-----------------------------------
+
+EXP-12
+
+Junits using Maven 
+
+>> mvn archetype:generate
+com.bnmit
+sample-app
+>> mvn clean test
+
+Open surefire-report in target for report 
+------------------------------------------
+
+EXP-14
+JaCoCo
+
+Same steps as exp-12
+Replace the jacoco plugin and delete Plugin management
+
+<plugins>
+  <plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.11</version>
+
+    <executions>
+      <!-- Attach JaCoCo agent -->
+      <execution>
+        <goals>
+          <goal>prepare-agent</goal>
+        </goals>
+      </execution>
+
+      <!-- Generate report -->
+      <execution>
+        <id>report</id>
+        <phase>test</phase>
+        <goals>
+          <goal>report</goal>
+        </goals>
+      </execution>
+    </executions>
+  </plugin>
+</plugins>
+ 
+run:
+mvn clean test 
+Open site folder in target and move to index.html and open it.
+-----------------------------------
+
+EXP-15
+Basic docker commands
+
+docker run hello-world
+docker pull nginx
+docker run -d -p 8083:80 nginx  (Verify by testing the localhost:8083)
+docker --version
+docker ps -a
+docker ps 
+docker stop <container id>
+
+-------------------------------------------
+
+EXP-16
+Docker app and image 
+
+create sample.py (add a one line code)
+
+(Dockerfile)
+
+FROM python:3.9-slim
+WORKDIR /app
+COPY . . 
+CMD ["python","sample.py"]
+
+docker build -t my-app .
+docker run my-app
+
+--Add the port for app.py
+
+(Dockerfile)
+
+FROM python:3.9-slim
+WORKDIR /app
+COPY . . 
+EXPOSE 5020
+CMD ["python","app.py"]
+
+docker build -t my-app .
+docker run -p 5020:5020 my-app
+
+(code for app.py)
+
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+PORT = 5020
+
+class MyHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(b"<h1>Hello from Docker Python Container</h1>")
+
+server = HTTPServer(("0.0.0.0", PORT), MyHandler)
+print(f"Server running on port {PORT}...")
+server.serve_forever()
+
+---------------------------------------
+
+EXP-17
+Docker map and volume 
+
+(VScode)
+
+--For porting
+
+docker run -d nginx
+
+docker run -d -p 8084:80 nginx
+
+docker volume create myvolume
+docker volume ls
+
+docker run -it -v myvolume:/data ubuntu bash
+
+cd /data
+echo "Docker Volume Persistence Test" > test.txt
+exit
+
+docker run -it -v myvolume:/data ubuntu bash
+cat /data/test.txt
+
+--combining both
+
+docker run -d -p 8081:80 -v myvolume:/usr/share/nginx/html nginx
+docker run -it -v myvolume:/usr/share/nginx/html ubuntu bash
+echo "<h1>Persistent Web Page</h1>" > /usr/share/nginx/html/index.html
+exit
+http://localhost:8081
+
+---------------------------------------------
+
+EXP-18
+
+Docker push:
+
+Dockerfile 
+Grade.java
+
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY . /app
+RUN javac Grade.java
+CMD ["java", "Grade"]
+
+
+import java.util.Scanner;
+
+public class Grade{
+
+  // Returns a letter grade based on the average
+  static char gradeFunction(double avg) {
+    if (avg >= 90) return 'A';
+    else if (avg >= 80) return 'B';
+    else if (avg >= 70) return 'C';
+    else if (avg >= 60) return 'D';
+    else return 'F';
+  }
+
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.print("How many grades (1 to 5)? ");
+    int count = scanner.nextInt();
+
+    // Validate the input count
+    if (count < 1 || count > 5) {
+      System.out.println("Invalid number. You must enter between 1 and 5 grades.");
+      scanner.close();
+      return; // Exit
+    }
+
+    double sum = 0.0;
+
+    // Read each grade
+    for (int i = 1; i <= count; i++) {
+      System.out.print("Enter grade " + i + ": ");
+      double grade = scanner.nextDouble();
+      sum += grade;
+    }
+
+    double avg = sum / count;
+    System.out.println("Average: " + avg);
+    System.out.println("Letter grade: " + gradeFunction(avg));
+
+    scanner.close();
+  }
+}
+
+
+docker build -t java-app
+docker login (copy the user name)
+
+docker tag java-app sujan0018/java-app:v1
+docker push sujan0018/java-app:v1
+
+Verify on docker hub
+
+------------------------------------------------------
+EXP-19
+
+create a folder and Dockerfile and app.py 
+
+Add:
+
+git init
+git remote add origin <git_repo> 
+git add .
+git commit
+git push -u origin master 
+
+In Jenkins 
+open pipeline and add scripts
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Clone Code') {
+            steps {
+                git '<your-repo>'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t my-app .'
+            }
+        }
+        stage('Run Container') {
+            steps {
+                bat 'docker run -d my-app'
+            }
+        }
+    }
+}
+
+save and build 
+-------------------------------
+
+EXP-13 
+
+do the mvn archetype:generate 
+
+same as EXP-12
+
+Once the mvn clean test is done copy the sample-app path 
+open Jenkins and open free style project 
+Add the execute batch steps command on build step
+
+cd <path>
+mvn clean test 
+save and build
+
+------------------------------------------
+
+EXP-20
+
+Clone the repo 
+https://github.com/SarveshG2005/exp20.git
+
+Go to pipeline in Jenkins
+Add scm 
+click git and enter the your repo link and cred.
+click save and build 
+
+------------------------------------------
+BankService.java
+
+public class BankService { 
+ 
+    // Nested class (can be public or private, doesn't matter for functionality) 
+    static class BankAccount { 
+        private double balance; 
+ 
+        public BankAccount(double initialBalance) { 
+            if (initialBalance < 0) { 
+                throw new IllegalArgumentException("Initial balance cannot be negative"); 
+            } 
+            this.balance = initialBalance; 
+        } 
+ 
+        public void deposit(double amount) { 
+            if (amount <= 0) { 
+                throw new IllegalArgumentException("Deposit must be positive"); 
+            } 
+            balance += amount; 
+        } 
+ 
+        public void withdraw(double amount) { 
+            if (amount <= 0 || amount > balance) { 
+                throw new IllegalArgumentException("Invalid withdrawal"); 
+            } 
+            balance -= amount; 
+        } 
+ 
+        public double getBalance() { 
+            return balance; 
+        } 
+    } 
+ 
+    // The main entry point 
+    public static void main(String[] args) { 
+        // Create an instance of the BankAccount class 
+        BankAccount acc = new BankAccount(5000); 
+         
+        System.out.println("Initial Balance: " + acc.getBalance()); 
+ 
+        // Perform operations 
+        acc.deposit(700); 
+        System.out.println("Balance after deposit of 500: " + acc.getBalance()); 
+ 
+        acc.withdraw(100); 
+        System.out.println("Balance after withdrawal of 300: " + acc.getBalance()); 
+ 
+        // Print final result 
+        System.out.println("Final Balance: " + acc.getBalance()); 
+    } 
+} 
+
+
+
+
+
